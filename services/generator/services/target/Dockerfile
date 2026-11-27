@@ -1,0 +1,7 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+RUN python -m pip install --no-cache-dir fastapi uvicorn
+COPY app.py .
+
+CMD ["python", "-m", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
