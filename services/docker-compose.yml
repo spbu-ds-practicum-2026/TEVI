@@ -1,0 +1,76 @@
+x-http-healthcheck: &http-healthcheck
+  test:
+    - CMD
+    - python
+    - -c
+    - "from http.client import HTTPConnection; conn = HTTPConnection('127.0.0.1', 8080, timeout=2); conn.request('GET', '/health'); raise SystemExit(conn.getresponse().status != 200)"
+  interval: 2s
+  timeout: 3s
+  start_period: 5s
+  retries: 5
+
+x-node: &node
+  build:
+    context: .
+    dockerfile: node/Dockerfile
+  volumes:
+    - ./config/cluster.json:/app/config/cluster.json:ro
+  networks:
+    - cluster
+  depends_on:
+    distributor:
+      condition: service_healthy
+    target:
+      condition: service_healthy
+  healthcheck: *http-healthcheck
+
+x-node-env: &node-env
+  CONFIG_PATH: /app/config/cluster.json
+
+services:
+  distributor:
+    build: ./distributor
+    environment:
+      CONFIG_PATH: /app/config/cluster.json
+    volumes:
+      - ./config/cluster.json:/app/config/cluster.json:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - cluster
+      - ingress
+    healthcheck: *http-healthcheck
+
+  node1:
+    <<: *node
+    environment:
+      <<: *node-env
+      NODE_ID: n1
+
+  node2:
+    <<: *node
+    environment:
+      <<: *node-env
+      NODE_ID: n2
+
+  node3:
+    <<: *node
+    environment:
+      <<: *node-env
+      NODE_ID: n3
+
+  node4:
+    <<: *node
+    environment:
+      <<: *node-env
+      NODE_ID: n4
+
+  target:
+    build: ./generator/services/target
+    networks:
+      - cluster
+
+networks:
+  cluster:
+    internal: true
+  ingress:
