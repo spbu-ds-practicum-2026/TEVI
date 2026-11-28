@@ -15,7 +15,7 @@ def stores():
 
 def test_prune_and_count(stores):
     assert stores[0].prune_and_count("A", 15) == 0
-    assert "A" not in stores[0].windows
+    assert "A" not in stores[0].windows 
     assert stores[1].prune_and_count("A", 15) == 0
     assert stores[1].prune_and_count("B", 15) == 3
     assert stores[1].prune_and_count("B", 16) == 1

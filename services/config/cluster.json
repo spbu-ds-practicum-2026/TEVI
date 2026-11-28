@@ -6,6 +6,8 @@
         "n3": "http://node3:8080",
         "n4": "http://node4:8080"
     },
+    "target_addr": "http://target:8080",
+    "distributor_addr": "http://distributor:8080",
     "L": 100,
     "T": 10,
     "T_grace": 3,
