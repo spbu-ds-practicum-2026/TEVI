@@ -7,9 +7,9 @@ from time import monotonic_ns
 
 class RateLimiter:
     def __init__(
-        self,
-        store: WindowStore,
-        quota_calculator: QuotaCalculator,
+        self, 
+        store: WindowStore, 
+        quota_calculator: QuotaCalculator, 
         clock_ns: Callable[[], int] = monotonic_ns
     ):
         self.store = store

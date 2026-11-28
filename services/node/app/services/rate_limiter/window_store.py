@@ -2,9 +2,9 @@ from collections import defaultdict, deque
 
 class WindowStore:
     def __init__(
-        self,
-        window_ns: int,
-        idle_ttl_ns: int,
+        self, 
+        window_ns: int, 
+        idle_ttl_ns: int, 
         windows: defaultdict[str, deque[int]]
     ):
         if idle_ttl_ns < window_ns:
@@ -21,11 +21,11 @@ class WindowStore:
         while(self.windows[user_id] and self.windows[user_id][0] + self.window_ns < now_ns):
             self.windows[user_id].popleft()
 
-        answer = len(self.windows[user_id])
+        answer = len(self.windows[user_id]) 
 
         if answer == 0:
             del self.windows[user_id]
-
+        
         return answer
 
     def record(self, user_id: str, now_ns: int) -> None:
